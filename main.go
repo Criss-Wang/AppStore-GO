@@ -1,18 +1,18 @@
 package main
 
 import (
-    "fmt"
-    "log"
-    "net/http"
+	"fmt"
+	"log"
+	"net/http"
 
-    "appstore/backend"
-    "appstore/handler"
+	"appstore/backend"
+	"appstore/handler"
 )
 
 func main() {
-    fmt.Println("started-service")
+	fmt.Println("started-service")
 
-    backend.InitElasticsearchBackend()
+	backend.InitElasticsearchBackend()
 
-    log.Fatal(http.ListenAndServe(":8080", handler.InitRouter()))
+	log.Fatal(http.ListenAndServe(":8080", handler.InitRouter()))
 }
