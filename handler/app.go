@@ -9,6 +9,8 @@ import (
 	"appstore/model"
 	"appstore/service"
 
+	jwt "github.com/form3tech-oss/jwt-go"
+	"github.com/gorilla/mux"
 	"github.com/pborman/uuid"
 )
 
@@ -26,9 +28,13 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	// Parse from body of request to get a json object.
 	fmt.Println("Received one upload request")
 
+	user := r.Context().Value("user")
+	claims := user.(*jwt.Token).Claims
+	username := claims.(jwt.MapClaims)["username"]
+
 	app := model.App{
 		Id:          uuid.New(),
-		User:        r.FormValue("user"),
+		User:        username.(string),
 		Title:       r.FormValue("title"),
 		Description: r.FormValue("description"),
 	}
@@ -100,3 +106,20 @@ func checkoutHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Checkout process started!")
 }
+
+func deleteHandler(w http.ResponseWriter, r *http.Request) {
+    fmt.Println("Received one request for delete")
+
+    user := r.Context().Value("user")
+    claims := user.(*jwt.Token).Claims
+    username := claims.(jwt.MapClaims)["username"].(string)
+    id := mux.Vars(r)["id"]
+
+    if err := service.DeleteApp(id, username); err != nil {
+        http.Error(w, "Failed to delete app from backend", http.StatusInternalServerError)
+        fmt.Printf("Failed to delete app from backend %v\n", err)
+        return
+    }
+    fmt.Println("App is deleted successfully")
+}
+
