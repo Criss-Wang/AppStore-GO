@@ -3,7 +3,7 @@ App store programmed in Go, working with JWT, Google Cloud Engine (GCE), Google 
 
 ### demo
 - Login
-![](demo2.gif)
+![](demo1.gif)
 - Add App
 ![](demo2.gif)
 - Payment
